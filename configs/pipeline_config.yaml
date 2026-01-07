@@ -1,0 +1,98 @@
+# LLM Training Data Pipeline Configuration
+
+pipeline:
+  name: "llm-data-pipeline"
+  version: "1.0.0"
+  
+# Data Paths
+paths:
+  raw_data: "data/raw"
+  processed_data: "data/processed"
+  output_data: "data/output"
+  logs: "logs"
+
+# Ingestion Settings
+ingestion:
+  source: "simplewiki"  # Options: simplewiki, enwiki, custom
+  wiki_dump_url: "https://dumps.wikimedia.org/simplewiki/latest/simplewiki-latest-pages-articles.xml.bz2"
+  max_articles: null  # null for all, or set a number for testing
+  batch_size: 1000
+  
+# Cleaning Settings
+cleaning:
+  remove_wiki_markup: true
+  remove_html_tags: true
+  remove_urls: true
+  remove_citations: true
+  normalize_unicode: true
+  normalize_whitespace: true
+  min_length_chars: 100  # Minimum characters after cleaning
+  
+# Deduplication Settings
+deduplication:
+  enabled: true
+  algorithm: "minhash_lsh"  # Options: minhash_lsh, exact_hash, simhash
+  num_permutations: 128     # More = more accurate, slower
+  threshold: 0.8            # Jaccard similarity threshold
+  num_bands: 32             # LSH bands (auto-calculated if null)
+  shingle_size: 5           # N-gram size for shingling
+  
+# Quality Filtering Settings
+quality:
+  enabled: true
+  min_words: 50
+  max_words: 100000
+  min_avg_word_length: 3
+  max_avg_word_length: 15
+  min_alphabetic_ratio: 0.7  # Ratio of alphabetic chars
+  max_digit_ratio: 0.3       # Max ratio of digits
+  max_symbol_ratio: 0.2      # Max ratio of special chars
+  language_filter:
+    enabled: true
+    allowed_languages: ["en"]
+    min_confidence: 0.9
+  # Perplexity filtering (requires KenLM model)
+  perplexity_filter:
+    enabled: false
+    model_path: null
+    max_perplexity: 10000
+    
+# Tokenization Settings
+tokenization:
+  enabled: true
+  algorithm: "bpe"  # Options: bpe, wordpiece, unigram
+  vocab_size: 32000
+  min_frequency: 2
+  special_tokens:
+    - "<pad>"
+    - "<unk>"
+    - "<bos>"
+    - "<eos>"
+  output_format: "jsonl"  # Options: jsonl, parquet, arrow
+  
+# Output Settings
+output:
+  format: "parquet"  # Options: parquet, jsonl, arrow
+  compression: "snappy"  # Options: snappy, gzip, none
+  max_file_size_mb: 500
+  include_metadata: true
+  
+# Logging Settings
+logging:
+  level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  log_to_file: true
+  log_file: "logs/pipeline.log"
+  
+# Metrics Settings
+metrics:
+  enabled: true
+  report_interval: 1000  # Report every N documents
+  save_to_file: true
+  metrics_file: "logs/metrics.json"
+  
+# Performance Settings
+performance:
+  num_workers: 4  # Number of parallel workers
+  chunk_size: 10000  # Documents per chunk
+  memory_limit_gb: 8  # Max memory usage
