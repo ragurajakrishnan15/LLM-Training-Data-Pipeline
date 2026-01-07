@@ -212,9 +212,7 @@ pytest tests/ --cov=src --cov-report=html
 - [Deduplicating Training Data Makes Language Models Better](https://arxiv.org/abs/2107.06499)
 - [Quality at a Glance: An Audit of Web-Crawled Multilingual Datasets](https://arxiv.org/abs/2103.12028)
 
-## 📄 License
 
-MIT License - see LICENSE file for details.
 
 ## 👤 Author
 
