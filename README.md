@@ -218,5 +218,4 @@ pytest tests/ --cov=src --cov-report=html
 
 **Raguraja Krishnan Natarajan Mangaleshwaran**
 - MS Information Systems (Applied Data Science) - SUNY Binghamton
-- [LinkedIn](https://linkedin.com/in/yourprofile)
-- [GitHub](https://github.com/yourprofile)
+- [LinkedIn](https://www.linkedin.com/in/ragurajakrishnan/)
